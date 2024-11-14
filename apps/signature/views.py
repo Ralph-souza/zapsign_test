@@ -6,19 +6,19 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 
 from .models import Company, Document, Signers
-from .serializers import CompanySerializer, DocumentSerializer, SignersSerializer
+from .serializers import DocumentSerializer
 
 
 ZAPSIGN_API_URL = "https://sandbox.api.zapsign.com.br/api/v1/"
 
 
-class CompanyViewSet(viewsets.ModelViewSet):
+class DocumentViewSet(viewsets.ModelViewSet):
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
 
-    @api_view(['POST'])
-    def create_document(self, request):
+    def create_document(self, request, *args, **kwargs):
         # Extrair dados do request
         company = get_object_or_404(Company, id=request.data.get("company_id"))
         document_name = request.data.get("name")
@@ -65,4 +65,21 @@ class CompanyViewSet(viewsets.ModelViewSet):
 
         return Response({"Error": "Falha ao criar o documento na Zapsign"}, status.HTTP_400_BAD_REQUEST)
 
+    def list_documents(self, request, *args, **kwargs):
+        documents = Document.objects.all()
+        serializer = DocumentSerializer(documents, many=True)
 
+        return Response(serializer.data)
+
+    def update_document(self, request, *args, **kwargs):
+        document = self.get_object()
+        document.name = request.data.get("name", document.name)
+        document.save()
+
+        return Response(DocumentSerializer(document).data)
+
+    def delete_document(self, request, *args, **kwargs):
+        document = self.get_object()
+        document.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -1,8 +1,12 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from .views import signature_view
+from .views import DocumentViewSet
 
+
+router = DefaultRouter()
+router.register(r'documents', DocumentViewSet, basename='document')
 
 urlpatterns = [
-    path('signature/', signature_view, names='signature'),
+    path('', include(router.urls)),
 ]
