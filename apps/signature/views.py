@@ -8,10 +8,15 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from .models import Company, Document, Signers
-from .serializers import DocumentSerializer
-
+from .serializers import CompanySerializer, DocumentSerializer, SignersSerializer
 
 ZAPSIGN_API_URL = "https://sandbox.api.zapsign.com.br/api/v1/"
+
+
+class CompanyViewSet(viewsets.ModelViewSet):
+    http_method_names = ["get", "post", "patch", "put", "delete"]
+    queryset = Company.objects.all().order_by("created_at",)
+    serializer_class = CompanySerializer
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -83,3 +88,9 @@ class DocumentViewSet(viewsets.ModelViewSet):
         document.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class SignerViewSet(viewsets.ModelViewSet):
+    http_method_names = ["get", "post", "patch", "put", "delete"]
+    queryset = Signers.object.all().order_by("created_at")
+    serializer_class = SignersSerializer
