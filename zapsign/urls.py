@@ -1,7 +1,7 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import re_path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('signature/', include('apps.signature.urls'), name='signature'),
+    re_path(r'admin/', admin.site.urls),
+    re_path(r'^v1/api/', include('apps.signature.urls'), name='signature'),
 ]

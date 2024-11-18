@@ -92,5 +92,5 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
 class SignerViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "patch", "put", "delete"]
-    queryset = Signers.object.all().order_by("created_at")
+    queryset = Signers.objects.all().order_by("id")
     serializer_class = SignersSerializer
